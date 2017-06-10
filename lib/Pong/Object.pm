@@ -8,4 +8,16 @@ has rect => (
 	required => 0
 );
 
+# our object velocity when moving up and down
+has velocity_y => (
+	is => 'rw',
+	required => 0
+);
+
+# our object velocity when moving left and right
+has velocity_x => (
+	is => 'rw',
+	required => 1
+);
+
 1;

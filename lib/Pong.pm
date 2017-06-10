@@ -33,6 +33,7 @@ my $ball = Pong::Object->new(
 # trigger the rendering event
 $app->add_show_handler(\&render_object);
 
+# render all game objects
 sub render_object {
 	my $self = shift;
 	
