@@ -11,7 +11,7 @@ has paddle => (
 # the velocity of our paddle when moving up and down
 has velocity_y => (
 	is => 'rw',
-	required => 0
+	required => 1
 );
 
 1;

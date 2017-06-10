@@ -17,7 +17,7 @@ has velocity_y => (
 # our object velocity when moving left and right
 has velocity_x => (
 	is => 'rw',
-	required => 1
+	required => 0
 );
 
 1;
