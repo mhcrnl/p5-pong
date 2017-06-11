@@ -93,7 +93,18 @@ sub update_player2_movements {
 	my $paddle = $player2->paddle;
 	my $velocity_y = $player2->velocity_y;
 
-	# move the paddle according to the configured y axis velocity
+	if ($ball->rect->y > $paddle->y) {
+		$player2->velocity_y = 7;
+	}
+
+	elsif ($ball->rect->y < $paddle->y) {
+		$player2->velocity_y = -7;
+	}
+
+	else {
+		$player2->velocity_y = 0;
+	}
+
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
