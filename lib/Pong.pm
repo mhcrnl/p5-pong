@@ -4,6 +4,7 @@ package Pong;
 use Modern::Perl '2009';
 use Moo;
 use SDL;
+use SDL::Color;
 use SDL::Events;
 use SDLx::App;
 use SDLx::Rect;
@@ -12,8 +13,9 @@ use Pong::Player;
 use Pong::Object;
 
 my $COLOR = {
-	BLACK => 0x000000FF,
-	RED => 0xFF0000FF
+	BLACK => SDL::Color->new(0, 0, 0),
+	RED => SDL::Color->new(255, 0, 0),
+	LIGHT_BLUE => SDL::Color->new(66, 167, 244)
 };
 
 my $app = SDLx::App->new(
@@ -25,17 +27,19 @@ my $app = SDLx::App->new(
 
 # SDLx::Rect params ($x, $y, $width, $height)
 my $player1 = Pong::Player->new(
-	paddle => SDLx::Rect->new(10, $app->height / 2, 10, 30),
+	paddle => SDLx::Rect->new(10, $app->height / 2, 10, 70),
 	velocity_y => 0
 );
 
 my $player2 = Pong::Player->new(
-	paddle => SDLx::Rect->new($app->width - 20, $app->height / 2, 10, 30),
+	paddle => SDLx::Rect->new($app->width - 20, $app->height / 2, 10, 70),
 	velocity_y => 0
 );
 
 my $ball = Pong::Object->new(
-	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 100, 100)
+	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 10, 10),
+	velocity_x => -2.7,
+	velocity_y => 1.8
 );
 
 # trigger the rendering event
@@ -46,6 +50,9 @@ $app->add_move_handler(\&update_player1_movements);
 
 # trigger the update event for player 2
 $app->add_move_handler(\&update_player2_movements);
+
+# trigger the update event for ball object
+$app->add_move_handler(\&update_ball_movements);
 
 # trigger the input event for player 1
 $app->add_event_handler(\&update_player1_event_loop);
@@ -62,8 +69,8 @@ sub render_objects {
 	$app->draw_rect($ball->rect, $COLOR->{RED});
 	
 	# render both paddles
-	$app->draw_rect($player1->paddle, $COLOR->{RED});
-	$app->draw_rect($player2->paddle, $COLOR->{RED});
+	$app->draw_rect($player1->paddle, $COLOR->{LIGHT_BLUE});
+	$app->draw_rect($player2->paddle, $COLOR->{LIGHT_BLUE});
 
 	$app->update;
 }
@@ -126,6 +133,29 @@ sub update_player2_event_loop {
 		if ($event->key_sym == SDLK_UP or $event->key_sym == SDLK_DOWN) {
 		$player2->velocity_y(0);
 		}
+	}
+}
+
+# FIXME collision not working right
+sub update_ball_movements {
+	my ($step, $app) = @_;
+	my $ball_rect = $ball->rect;
+	
+	$ball_rect->move_ip(
+		$ball->velocity_x * $step,
+		$ball->velocity_y * $step
+	);
+
+	# collision to the bottom of the screen
+	if ($ball_rect->bottom >= $app->height) {
+		$ball_rect->bottom($app->height);
+		$ball->velocity_y($ball_rect->velocity_y *= -1);
+	}
+
+	# collision to the top of the screen
+	elsif ($ball_rect->top <= 0) {
+		$ball_rect->top(0);
+		$ball->velocity_y($ball->velocity_y *= -1);
 	}
 }
 
