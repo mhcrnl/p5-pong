@@ -11,6 +11,11 @@ use SDLx::Rect;
 use Pong::Player;
 use Pong::Object;
 
+my $COLOR = {
+	BLACK => 0x000000FF,
+	RED => 0xFF0000FF
+};
+
 my $app = SDLx::App->new(
 	width => 500,
 	height => 500,
@@ -45,19 +50,19 @@ $app->add_move_handler(\&update_player2_movements);
 $app->add_event_handler(\&update_player1_event_loop);
 
 # trigger the input event for player2
-$app->add_event_handler(\&update_player2_event_loop);
+# $app->add_event_handler(\&update_player2_event_loop);
 
 # render all game objects
 sub render_objects {
 	# clear screen
-	$app->draw_rect([0,0, $app->width, $app->height], 0x000000FF);
+	$app->draw_rect([0,0, $app->width, $app->height], $COLOR->{BLACK});
 
 	# render ball
-	$app->draw_rect($ball->rect, 0xFF0000FF);
+	$app->draw_rect($ball->rect, $COLOR->{RED});
 	
 	# render both paddles
-	$app->draw_rect($player1->paddle, 0xFF0000FF);
-	$app->draw_rect($player2->paddle, 0xFF0000FF);
+	$app->draw_rect($player1->paddle, $COLOR->{RED});
+	$app->draw_rect($player2->paddle, $COLOR->{RED});
 
 	$app->update;
 }
@@ -68,6 +73,7 @@ sub update_player1_movements {
 	my $velocity_y = $player1->velocity_y;
 
 	# move the paddle according to the configured y axis velocity
+	# move_ip(x,y)
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
@@ -84,23 +90,18 @@ sub update_player1_event_loop {
 	my ($event, $app) = @_;
 
 	# move up
-	if ($event->type == SDL_KEYDOWN) {
-		if ($event->key_sym == SDLK_w) {
-			$player1->velocity_y(-30);
-		}
+	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_w) {
+			$player1->velocity_y(-20);
 	}
 
 	# move down
-	elsif ($event->type == SDL_KEYDOWN) {
-		if ($event->key_sym == SDLK_s) {
-			$player1->velocity_y(2);
-		}
+	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_s) {
+			$player1->velocity_y(20);
 	}
 
 	# stop when user released key
 	elsif ($event->type == SDL_KEYUP) {
-		if ($event->key_sym == SDLK_w
-			or $event->key_sym == SDLK_s) {
+		if ($event->key_sym == SDLK_w or $event->key_sym == SDLK_s) {
 			$player1->velocity_y(0);
 		}
 	}
@@ -110,25 +111,18 @@ sub update_player2_event_loop {
 	my ($event, $app) = @_;
 
 	# move up
-	if ($event->type == SDL_KEYDOWN) {
-		if ($event->key_sym == SDLK_DOWN) {
+	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
 			$player2->velocity_y(-20);
-		}
 	}
 
 	# move down
-	elsif ($event->type == SDL_KEYDOWN) {
-		if ($event->key_sym == SDLK_DOWN) {
+	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
 			$player2->velocity_y(20);
-		}
 	}
 
 	# stop when user released key
-	elsif ($event->type == SDL_KEYUP) {
-		if ($event->key_sym == SDLK_UP
-			or $event->key_sym == SDLK_DOWN) {
+	elsif ($event->type == SDL_KEYUP or $event->key_sym == SDLK_DOWN) {
 			$player2->velocity_y(0);
-		}
 	}
 }
 
