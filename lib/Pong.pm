@@ -91,12 +91,12 @@ sub update_player1_event_loop {
 
 	# move up
 	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_w) {
-			$player1->velocity_y(-20);
+		$player1->velocity_y(-20);
 	}
 
 	# move down
 	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_s) {
-			$player1->velocity_y(20);
+		$player1->velocity_y(20);
 	}
 
 	# stop when user released key
@@ -112,17 +112,17 @@ sub update_player2_event_loop {
 
 	# move up
 	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
-			$player2->velocity_y(-20);
+		$player2->velocity_y(-20);
 	}
 
 	# move down
 	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
-			$player2->velocity_y(20);
+		$player2->velocity_y(20);
 	}
 
 	# stop when user released key
 	elsif ($event->type == SDL_KEYUP or $event->key_sym == SDLK_DOWN) {
-			$player2->velocity_y(0);
+		$player2->velocity_y(0);
 	}
 }
 
