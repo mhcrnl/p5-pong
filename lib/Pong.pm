@@ -143,8 +143,10 @@ sub update_ball_movements {
 	my ($step, $app) = @_;
 	my $ball_rect = $ball->rect;
 	
-	$ball_rect->move_ip($ball->velocity_x * $step,
-	$ball->velocity_y * $step);
+	$ball_rect->move_ip(
+		$ball->velocity_x * $step,
+		$ball->velocity_y * $step
+	);
 
 	# collision to the bottom of the screen
 	if ($ball_rect->bottom >= $app->height) {
