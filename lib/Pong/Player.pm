@@ -2,16 +2,21 @@
 package Pong::Player;
 use Modern::Perl '2009';
 use Moo;
+use MooX::LvalueAttribute;
+
+extends 'Pong::Object';
 
 has paddle => (
 	is => 'rw',
 	required => 1
 );
 
-# the velocity of our paddle when moving up and down
-has velocity_y => (
+# player's score
+has score => (
 	is => 'rw',
-	required => 1
+	required => 0,
+	lvalue => 1
 );
+
 
 1;

@@ -12,6 +12,7 @@ use SDLx::Rect;
 use Pong::Player;
 use Pong::Object;
 
+# Color constants in RGB
 my $COLOR = {
 	BLACK => SDL::Color->new(0, 0, 0),
 	RED => SDL::Color->new(255, 0, 0),
@@ -38,12 +39,16 @@ my $player2 = Pong::Player->new(
 
 my $ball = Pong::Object->new(
 	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 10, 10),
-	velocity_x => -2.7,
-	velocity_y => 1.8
+	velocity_x => 2.7,
+	velocity_y => 8
 );
 
-# trigger the rendering event
-$app->add_show_handler(\&render_objects);
+
+# trigger the input event for player 1
+$app->add_event_handler(\&update_player1_event_loop);
+
+# trigger the input event for player2
+$app->add_event_handler(\&update_player2_event_loop);
 
 # trigger the update event for player 1
 $app->add_move_handler(\&update_player1_movements);
@@ -54,11 +59,8 @@ $app->add_move_handler(\&update_player2_movements);
 # trigger the update event for ball object
 $app->add_move_handler(\&update_ball_movements);
 
-# trigger the input event for player 1
-$app->add_event_handler(\&update_player1_event_loop);
-
-# trigger the input event for player2
-$app->add_event_handler(\&update_player2_event_loop);
+# trigger the rendering event
+$app->add_show_handler(\&render_objects);
 
 # render all game objects
 sub render_objects {
@@ -90,7 +92,7 @@ sub update_player2_movements {
 	my $paddle = $player2->paddle;
 	my $velocity_y = $player2->velocity_y;
 
-	# move the paddle accroding to the configured y axis velocity
+	# move the paddle according to the configured y axis velocity
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
@@ -99,18 +101,18 @@ sub update_player1_event_loop {
 
 	# move up
 	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_w) {
-		$player1->velocity_y(-20);
+		$player1->velocity_y = -20;
 	}
 
 	# move down
 	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_s) {
-		$player1->velocity_y(20);
+		$player1->velocity_y = 20;
 	}
 
 	# stop when user released key
 	elsif ($event->type == SDL_KEYUP) {
 		if ($event->key_sym == SDLK_w or $event->key_sym == SDLK_s) {
-			$player1->velocity_y(0);
+			$player1->velocity_y = 0;
 		}
 	}
 }
@@ -120,42 +122,39 @@ sub update_player2_event_loop {
 
 	# move up
 	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_UP) {
-		$player2->velocity_y(-20);
+		$player2->velocity_y = -20;
 	}
 
 	# move down
 	elsif ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
-		$player2->velocity_y(20);
+		$player2->velocity_y = 20;
 	}
 
 	# stop when user released key
 	elsif ($event->type == SDL_KEYUP) {
 		if ($event->key_sym == SDLK_UP or $event->key_sym == SDLK_DOWN) {
-		$player2->velocity_y(0);
+		$player2->velocity_y = 0;
 		}
 	}
 }
 
-# FIXME collision not working right
 sub update_ball_movements {
 	my ($step, $app) = @_;
 	my $ball_rect = $ball->rect;
 	
-	$ball_rect->move_ip(
-		$ball->velocity_x * $step,
-		$ball->velocity_y * $step
-	);
+	$ball_rect->move_ip($ball->velocity_x * $step,
+	$ball->velocity_y * $step);
 
 	# collision to the bottom of the screen
 	if ($ball_rect->bottom >= $app->height) {
 		$ball_rect->bottom($app->height);
-		$ball->velocity_y($ball_rect->velocity_y *= -1);
+		$ball->velocity_y *= -1;
 	}
 
 	# collision to the top of the screen
 	elsif ($ball_rect->top <= 0) {
 		$ball_rect->top(0);
-		$ball->velocity_y($ball->velocity_y *= -1);
+		$ball->velocity_y *= -1;
 	}
 }
 

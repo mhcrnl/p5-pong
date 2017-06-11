@@ -2,6 +2,7 @@
 package Pong::Object;
 use Modern::Perl '2009';
 use Moo;
+use MooX::LvalueAttribute;
 
 has rect => (
 	is => 'rw',
@@ -11,13 +12,15 @@ has rect => (
 # our object velocity when moving up and down
 has velocity_y => (
 	is => 'rw',
-	required => 0
+	required => 0,
+	lvalue => 1
 );
 
 # our object velocity when moving left and right
 has velocity_x => (
 	is => 'rw',
-	required => 0
+	required => 0,
+	lvalue => 1
 );
 
 1;
