@@ -4,10 +4,11 @@ package Pong;
 use Modern::Perl '2009';
 use Moo;
 use SDL;
-use SDL::Color;
+use SDL::Color;	# for RGB, not sure why hex looks good to some people
 use SDL::Events;
 use SDLx::App;
 use SDLx::Rect;
+use SDLx::Text;
 
 use Pong::Player;
 use Pong::Object;
@@ -45,6 +46,9 @@ my $ball = Pong::Object->new(
 	velocity_y => 10
 );
 
+# display players score on top of the screen
+my $score_info = SDLx::Text->new(h_align => 'center');
+
 # trigger the input event for player 1
 $app->add_event_handler(\&update_player1_event_loop);
 
@@ -75,9 +79,15 @@ sub render_objects {
 	$app->draw_rect($player1->paddle, $COLOR->{LIGHT_BLUE});
 	$app->draw_rect($player2->paddle, $COLOR->{LIGHT_BLUE});
 
+	$score_info->write_to(
+		$app,
+		$player1->score . ' VS ' . $player2->score
+	);
+
 	$app->update;
 }
 
+# human player
 sub update_player1_movements {
 	my ($step, $app) = @_;
 	my $paddle = $player1->paddle;
@@ -88,19 +98,24 @@ sub update_player1_movements {
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
+# computer/bot player
+# will follow ball movements
 sub update_player2_movements {
 	my ($step, $app) = @_;
 	my $paddle = $player2->paddle;
 	my $velocity_y = $player2->velocity_y;
 
+	# move down
 	if ($ball->rect->y > $paddle->y) {
-		$player2->velocity_y = 7;
+		$player2->velocity_y = 6;
 	}
-
+	
+	# move up
 	elsif ($ball->rect->y < $paddle->y) {
-		$player2->velocity_y = -7;
+		$player2->velocity_y = -6;
 	}
 
+	# stop when the y level is same with the paddle y level
 	else {
 		$player2->velocity_y = 0;
 	}
@@ -108,6 +123,7 @@ sub update_player2_movements {
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
+# the user still can control player2 (sort of) even if it is a bot
 sub update_player2_event_loop {
 	my ($event, $app) = @_;
 
@@ -151,6 +167,15 @@ sub update_player1_event_loop {
 }
 
 # check the ball and paddle collision
+# when they met each other.
+# 
+# Some basic theory here -
+# represents $ball as $a, and $paddle as $b
+#
+# see the first if clause:
+#
+# when the bottom of the ball is under the top of the paddle,
+# it will return back to the routine
 sub check_collision {
 	my ($a, $b) = @_;
 
@@ -204,11 +229,13 @@ sub update_ball_movements {
 		reset_game;
 	}
 	
+	# player1's paddle collision 
 	elsif (check_collision($ball_rect, $player1->paddle)) {
 		$ball_rect->left($player1->paddle->right);
 		$ball->velocity_x *= -1;
 	}
 
+	# player2's paddle collision
 	elsif (check_collision($ball_rect, $player2->paddle)) {
 		$ball->velocity_x *= -1;
 		$ball->rect->right($player2->paddle->left);
