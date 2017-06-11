@@ -41,8 +41,8 @@ my $player2 = Pong::Player->new(
 
 my $ball = Pong::Object->new(
 	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 10, 10),
-	velocity_x => 6.8,
-	velocity_y => 8
+	velocity_x => 10,
+	velocity_y => 10
 );
 
 # trigger the input event for player 1
@@ -139,6 +139,25 @@ sub update_player1_event_loop {
 	}
 }
 
+# check the ball and paddle collision
+sub check_collision {
+	my ($a, $b) = @_;
+
+	return if $a->bottom < $b->top;
+	return if $a->top > $b->bottom;
+	return if $a->right < $b->left;
+	return if $a->left > $b->right;
+
+	return 1;
+}
+# put the ball at the middle of the screen
+sub reset_game {
+	my $self = shift;
+
+	$ball->rect->x($app->width / 2);
+	$ball->rect->y($app->height / 2);
+}
+
 sub update_ball_movements {
 	my ($step, $app) = @_;
 	my $ball_rect = $ball->rect;
@@ -164,14 +183,24 @@ sub update_ball_movements {
 	# and update player1 score
 	elsif ($ball_rect->right >= $app->width) {
 		$player1->score++;
-		warn $player1->score;
+		reset_game;
 	}
 
 	# collision to the left of the screen
 	# and update player2 score
 	elsif ($ball_rect->left <= 0) {
 		$player2->score++;
-		warn $player2->score;
+		reset_game;
+	}
+	
+	elsif (check_collision($ball_rect, $player1->paddle)) {
+		$ball_rect->left($player1->paddle->right);
+		$ball->velocity_x *= -1;
+	}
+
+	elsif (check_collision($ball_rect, $player2->paddle)) {
+		$ball->velocity_x *= -1;
+		$ball->rect->right($player2->paddle->left);
 	}
 }
 
