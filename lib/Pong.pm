@@ -23,6 +23,7 @@ my $app = SDLx::App->new(
 	exit_on_quit => 1
 );
 
+# SDLx::Rect params ($x, $y, $width, $height)
 my $player1 = Pong::Player->new(
 	paddle => SDLx::Rect->new(10, $app->height / 2, 10, 30),
 	velocity_y => 0
@@ -34,7 +35,7 @@ my $player2 = Pong::Player->new(
 );
 
 my $ball = Pong::Object->new(
-	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 10, 10)
+	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 100, 100)
 );
 
 # trigger the rendering event
@@ -50,7 +51,7 @@ $app->add_move_handler(\&update_player2_movements);
 $app->add_event_handler(\&update_player1_event_loop);
 
 # trigger the input event for player2
-# $app->add_event_handler(\&update_player2_event_loop);
+$app->add_event_handler(\&update_player2_event_loop);
 
 # render all game objects
 sub render_objects {
@@ -111,7 +112,7 @@ sub update_player2_event_loop {
 	my ($event, $app) = @_;
 
 	# move up
-	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_DOWN) {
+	if ($event->type == SDL_KEYDOWN and $event->key_sym == SDLK_UP) {
 		$player2->velocity_y(-20);
 	}
 
@@ -121,8 +122,10 @@ sub update_player2_event_loop {
 	}
 
 	# stop when user released key
-	elsif ($event->type == SDL_KEYUP or $event->key_sym == SDLK_DOWN) {
+	elsif ($event->type == SDL_KEYUP) {
+		if ($event->key_sym == SDLK_UP or $event->key_sym == SDLK_DOWN) {
 		$player2->velocity_y(0);
+		}
 	}
 }
 
