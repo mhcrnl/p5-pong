@@ -29,20 +29,21 @@ my $app = SDLx::App->new(
 # SDLx::Rect params ($x, $y, $width, $height)
 my $player1 = Pong::Player->new(
 	paddle => SDLx::Rect->new(10, $app->height / 2, 10, 70),
-	velocity_y => 0
+	velocity_y => 0,
+	score => 0
 );
 
 my $player2 = Pong::Player->new(
 	paddle => SDLx::Rect->new($app->width - 20, $app->height / 2, 10, 70),
-	velocity_y => 0
+	velocity_y => 0,
+	score => 0
 );
 
 my $ball = Pong::Object->new(
 	rect => SDLx::Rect->new($app->width / 2, $app->height / 2, 10, 10),
-	velocity_x => 2.7,
+	velocity_x => 6.8,
 	velocity_y => 8
 );
-
 
 # trigger the input event for player 1
 $app->add_event_handler(\&update_player1_event_loop);
@@ -96,7 +97,7 @@ sub update_player2_movements {
 	$paddle->move_ip(0, $velocity_y * $step);
 }
 
-sub update_player1_event_loop {
+sub update_player2_event_loop {
 	my ($event, $app) = @_;
 
 	# move up
@@ -117,7 +118,7 @@ sub update_player1_event_loop {
 	}
 }
 
-sub update_player2_event_loop {
+sub update_player1_event_loop {
 	my ($event, $app) = @_;
 
 	# move up
@@ -155,6 +156,20 @@ sub update_ball_movements {
 	elsif ($ball_rect->top <= 0) {
 		$ball_rect->top(0);
 		$ball->velocity_y *= -1;
+	}
+
+	# collision to the right of the screen
+	# and update player1 score
+	elsif ($ball_rect->right >= $app->width) {
+		$player1->score++;
+		warn $player1->score;
+	}
+
+	# collision to the left of the screen
+	# and update player2 score
+	elsif ($ball_rect->left <= 0) {
+		$player2->score++;
+		warn $player2->score;
 	}
 }
 
