@@ -1,4 +1,4 @@
-# Our main class (controller) to handle player, rendering
+# Our main class (controller) to handle objects movement, rendering
 # and calculations
 package Pong;
 use Modern::Perl '2009';
@@ -47,7 +47,11 @@ my $ball = Pong::Object->new(
 );
 
 # display players score on top of the screen
-my $score_info = SDLx::Text->new(h_align => 'center');
+my $score_info = SDLx::Text->new(
+	color => [254, 189, 88],
+	shadow => 1,
+	bold => 1
+);
 
 # trigger the input event for player 1
 $app->add_event_handler(\&update_player1_event_loop);
@@ -79,9 +83,10 @@ sub render_objects {
 	$app->draw_rect($player1->paddle, $COLOR->{LIGHT_BLUE});
 	$app->draw_rect($player2->paddle, $COLOR->{LIGHT_BLUE});
 
+	# display players score on the screen
 	$score_info->write_to(
 		$app,
-		$player1->score . ' VS ' . $player2->score
+		$player1->score . " player1 VS player2 " . $player2->score
 	);
 
 	$app->update;
