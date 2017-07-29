@@ -7,7 +7,17 @@ A classic Pong game in Perl 5 and SDL. Featuring AI, leaderboard and and simple 
 
 # Getting Started
 
-## Dependencies & Installation
+## Prerequisites
+* libsdl1.2-dev
+* libsdl-image1.2-dev
+* libsdl-sound 1.2-dev
+* libsdl-mixer1.2-dev
+* libsdl-pango-dev
+* libsdl-ttf2.0-dev
+* libogg-dev
+* libvorbis-dev
+
+## Installation
 
 * On Ubuntu/Debian, you can install - `libsdl-perl` using your **apt** package manager.
     - `sudo apt install libsdl-perl`
@@ -15,7 +25,7 @@ A classic Pong game in Perl 5 and SDL. Featuring AI, leaderboard and and simple 
 * or manually with ***cpanm***:
 
 ```sh
-sudo apt install libsdl-image1.2-dev libsdl-sound1.2-dev libsdl-mixer1.2-dev libsdl-pango-dev libsdl-ttf2.0-dev
+sudo apt install libsdl1.2-dev libsdl-image1.2-dev libsdl-sound1.2-dev libsdl-mixer1.2-dev libsdl-pango-dev libsdl-ttf2.0-dev libogg-dev libvorbis-dev
 
 cpanm --installdeps .
 
