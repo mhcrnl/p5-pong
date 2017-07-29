@@ -2,17 +2,26 @@ p5-pong
 --------
 A classic Pong game in Perl 5 and SDL. Featuring AI, leaderboard and and simple graphics.
 
-demo
------
 ![ezgif com-optimize](https://user-images.githubusercontent.com/24475030/27012262-2088940e-4eff-11e7-9185-0de6258dba20.gif)
 
-Dependencies & Installation
-----------------------------
-On Ubuntu/Debian, you can install - `libsdl-perl` using your package manager.
 
-or manually with `cpanm` - `sudo apt install libsdl-image1.2 libsdl-sound1.2 libsdl-mixer1.2 libsdl-pango1 libsdl-ttf2.0.0; cpanm --installdeps .`
+# Getting Started
 
-On Windows, you can just install SDL and the dependencies with `cpanm --installdeps .`
+## Dependencies & Installation
+
+* On Ubuntu/Debian, you can install - `libsdl-perl` using your **apt** package manager.
+    - `sudo apt install libsdl-perl`
+
+* or manually with ***cpanm***:
+
+```sh
+sudo apt install libsdl-image1.2-dev libsdl-sound1.2-dev libsdl-mixer1.2-dev libsdl-pango-dev libsdl-ttf2.0-dev
+
+cpanm --installdeps .
+
+```
+
+* On Windows, you can just install SDL and the dependencies with `cpanm --installdeps .`
 
 
 Acknowledgements
