@@ -2,7 +2,7 @@ p5-pong
 --------
 A classic Pong game in Perl 5 and SDL. Featuring AI, leaderboard and and simple graphics.
 
-[demo](https://user-images.githubusercontent.com/24475030/28744287-f9cf649e-748f-11e7-9a64-dce5dee935e6.gif)
+![demo](https://user-images.githubusercontent.com/24475030/28744287-f9cf649e-748f-11e7-9a64-dce5dee935e6.gif)
 
 # Getting Started
 
