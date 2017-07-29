@@ -84,9 +84,10 @@ sub render_objects {
 	$app->draw_rect($player2->paddle, $COLOR->{LIGHT_BLUE});
 
 	# display players score on the screen
+    my $left_gap = "  "x8;  # since we cannnot center our screen, we just append 8 blank spaces
 	$score_info->write_to(
 		$app,
-		$player1->score . " player1 VS player2 " . $player2->score
+		$left_gap . $player1->score . " player1 vs player2 " . $player2->score
 	);
 
 	$app->update;
@@ -194,9 +195,11 @@ sub check_collision {
 # put the ball at the middle of the screen
 sub reset_game {
 	my $self = shift;
-
-	$ball->rect->x($app->width / 2);
-	$ball->rect->y($app->height / 2);
+    
+    my $width = rand($app->width) / 2;
+    my $height = rand($app->height / 2);
+	$ball->rect->x($width);
+	$ball->rect->y($height);
 }
 
 sub update_ball_movements {
